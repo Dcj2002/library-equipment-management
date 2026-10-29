@@ -7,7 +7,7 @@ const categories = ['Computer', 'Projector', 'Printer', 'Scanner', 'Audio', 'Oth
 const conditions = ['Good', 'Fair', 'Needs repair'];
 const empty = { name: '', assetTag: '', category: 'Computer', location: '', condition: 'Good', notes: '' };
 function status(item) { return item.loan ? (new Date(item.loan.dueDate) < new Date() ? 'Overdue' : 'Issued') : item.condition === 'Needs repair' ? 'Maintenance' : 'Available'; }
-function App({ user, onProfile, onBorrowings, onLogout }) {
+function App({ user, onHome, onProfile, onBorrowings, onLogout }) {
   const admin = user.role === 'admin';
   const [members, setMembers] = useState([]), [membersLoading, setMembersLoading] = useState(false);
   const [items, setItems] = useState([]), [all, setAll] = useState([]);
@@ -64,7 +64,7 @@ function App({ user, onProfile, onBorrowings, onLogout }) {
   const available = all.filter(x => status(x) === 'Available').length;
   return <div className="app">
     <aside><a className="brand" href="#"><span className="logo">L</span><span>LIBRARY<span className="brand-small">Equipment management</span></span></a><div className="workspace">WORKSPACE</div><button className="nav active" onClick={() => { setFilter(''); setQuery(''); setCategory(''); }}>▦ &nbsp; Equipment overview</button><div className="aside-note">A place for everything.<br/><strong>Keep your library connected.</strong><p>Inventory & borrowing workspace</p></div></aside>
-    <main><header><span>Workspace <span className="slash">/</span> Equipment overview</span><div className="account-controls"><button onClick={onBorrowings}>My borrowings</button><button onClick={onProfile}>{user.name} · {admin ? 'Admin' : 'Profile'}</button><button onClick={onLogout}>Log out</button></div></header>
+    <main><header><span>Workspace <span className="slash">/</span> Equipment overview</span><div className="account-controls"><button onClick={onHome}>Home</button><button onClick={onBorrowings}>My borrowings</button><button onClick={onProfile}>{user.name} · {admin ? 'Admin' : 'Profile'}</button><button onClick={onLogout}>Log out</button></div></header>
       <section className="heading"><div><div className="eyebrow">YOUR LIBRARY, ORGANIZED</div><h1>Library Equipment Management</h1><p>Track your equipment. Make every resource count.</p></div>{admin && <button className="primary" onClick={() => open('add')}>＋ Add equipment</button>}</section>
       <section className="stats" aria-label="Inventory summary">{[['Total equipment', all.length, 'Every asset in one place'], ['Available', available, 'Ready for the next borrower'], ['On loan', all.filter(x => x.loan).length, 'Currently checked out'], ['Overdue', all.filter(x => status(x) === 'Overdue').length, 'Follow up on these returns']].map(([label, number, detail], i) => <article className={'stat stat-' + i} key={label}><span>{label}</span><strong>{number}</strong><small>{detail}</small></article>)}</section>
       {notice && <p className="success" role="status">{notice}</p>}
