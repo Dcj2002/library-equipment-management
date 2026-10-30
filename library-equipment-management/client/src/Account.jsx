@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { request } from './api.js';
 import HomePage from './HomePage.jsx';
+import { EquipmentPhoto } from './EquipmentPhoto.jsx';
 function AuthForm({ onLogin, initialMode, onHome, onSwitch }) {
   const mode = initialMode;
   const [form, setForm] = useState({ name: '', email: '', memberId: '', password: '', confirm: '' });
@@ -40,7 +41,7 @@ function Borrowings() {
     request('/auth/my-borrowings', 'GET', null, controller.signal).then(setItems).catch(e => { if (e.name !== 'AbortError') setError(e.message); }).finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
   }, [refresh]);
-  return <section className="inventory"><div className="section-top"><div><h2>My current borrowings</h2><p>Ask a library administrator to issue or return equipment.</p></div><button onClick={() => setRefresh(x => x + 1)}>Refresh</button></div>{error ? <p className="error" role="alert">{error}</p> : loading ? <p className="empty">Loading borrowings…</p> : !items.length ? <p className="empty">You have no equipment on loan.</p> : <div className="table-wrap"><table><thead><tr><th>Equipment</th><th>Asset tag</th><th>Due date</th><th>Status</th></tr></thead><tbody>{items.map(item => { const overdue = new Date(item.loan.dueDate) < new Date(); return <tr key={item._id}><td>{item.name}</td><td>{item.assetTag}</td><td>{new Date(item.loan.dueDate).toLocaleString()}</td><td><span className={'badge ' + (overdue ? 'overdue' : 'issued')}>{overdue ? 'Overdue' : 'Issued'}</span></td></tr>; })}</tbody></table></div>}</section>;
+  return <section className="inventory"><div className="section-top"><div><h2>My current borrowings</h2><p>Ask a library administrator to issue or return equipment.</p></div><button onClick={() => setRefresh(x => x + 1)}>Refresh</button></div>{error ? <p className="error" role="alert">{error}</p> : loading ? <p className="empty">Loading borrowings…</p> : !items.length ? <p className="empty">You have no equipment on loan.</p> : <div className="table-wrap"><table><thead><tr><th>Equipment</th><th>Asset tag</th><th>Due date</th><th>Status</th></tr></thead><tbody>{items.map(item => { const overdue = new Date(item.loan.dueDate) < new Date(); return <tr key={item._id}><td><div className="equipment-name-cell"><EquipmentPhoto item={item} /><span>{item.name}</span></div></td><td>{item.assetTag}</td><td>{new Date(item.loan.dueDate).toLocaleString()}</td><td><span className={'badge ' + (overdue ? 'overdue' : 'issued')}>{overdue ? 'Overdue' : 'Issued'}</span></td></tr>; })}</tbody></table></div>}</section>;
 }
 const pages = ['home', 'login', 'register', 'workspace', 'profile', 'borrowings'];
 function currentPage() {

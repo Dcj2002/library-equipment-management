@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { categories, conditions } from './validation.js';
+import { categories, conditions, photoKeys } from './validation.js';
 const loanSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
   borrower: { type: String, required: true, maxlength: 100 },
@@ -13,6 +13,7 @@ const schema = new mongoose.Schema({
   category: { type: String, required: true, enum: categories },
   location: { type: String, required: true, maxlength: 100 },
   condition: { type: String, required: true, enum: conditions },
+  photoKey: { type: String, enum: photoKeys, default: '' },
   notes: { type: String, default: '', maxlength: 500 },
   loan: { type: loanSchema, default: null },
   revision: { type: Number, default: 0 }

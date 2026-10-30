@@ -1,4 +1,5 @@
 export const categories = ['Computer', 'Projector', 'Printer', 'Scanner', 'Audio', 'Other'];
+export const photoKeys = ['', 'computer', 'headphones', 'printer', 'projector', 'scanner', 'none'];
 export const conditions = ['Good', 'Fair', 'Needs repair'];
 export function validateEquipment(body) {
   const errors = [];
@@ -7,6 +8,10 @@ export function validateEquipment(body) {
     if (typeof body[key] !== 'string') { errors.push(`${key} must be text`); continue; }
     clean[key] = body[key].trim();
     if ((key !== 'notes' && !clean[key]) || clean[key].length > max) errors.push(`${key} is required and must be at most ${max} characters`);
+  }
+  if (body.photoKey !== undefined) {
+    if (typeof body.photoKey !== 'string' || !photoKeys.includes(body.photoKey)) errors.push('Choose a valid equipment photo');
+    else clean.photoKey = body.photoKey;
   }
   if (!categories.includes(clean.category)) errors.push('Choose a valid category');
   if (!conditions.includes(clean.condition)) errors.push('Choose a valid condition');

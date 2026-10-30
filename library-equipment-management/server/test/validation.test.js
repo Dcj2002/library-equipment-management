@@ -19,3 +19,17 @@ test('accepts future loan and ignores untrusted additional fields', () => {
   const r = validateLoan({ borrower: 'Nimal', borrowerId: 'S1', dueDate: new Date(Date.now()+86400000).toISOString(), admin: true });
   assert.deepEqual(r.errors, []); assert.equal(r.loan.admin, undefined);
 });
+
+test('accepts photo choices and keeps legacy requests compatible', () => {
+  for (const photoKey of ['', 'computer', 'headphones', 'printer', 'projector', 'scanner', 'none']) {
+    const result = validateEquipment({ ...item, photoKey });
+    assert.deepEqual(result.errors, []);
+    assert.equal(result.clean.photoKey, photoKey);
+  }
+  assert.equal(Object.hasOwn(validateEquipment(item).clean, 'photoKey'), false);
+});
+test('rejects arbitrary photo paths and non-string values', () => {
+  for (const photoKey of ['../../secret', 'https://example.com/photo.jpg', { $ne: null }, 1]) {
+    assert.ok(validateEquipment({ ...item, photoKey }).errors.includes('Choose a valid equipment photo'));
+  }
+});
