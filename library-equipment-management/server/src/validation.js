@@ -1,5 +1,7 @@
-export const categories = ['Computer', 'Projector', 'Printer', 'Scanner', 'Audio', 'Other'];
-export const photoKeys = ['', 'computer', 'headphones', 'printer', 'projector', 'scanner', 'none'];
+export const categories = ['Computer', 'Projector', 'Printer', 'Scanner', 'Audio', 'Other',
+  'Books - Mathematics', 'Books - Electronics', 'Books - Civil Engineering',
+  'Books - Mechanical Engineering', 'Books - Computer Engineering'];
+export const photoKeys = ['', 'computer', 'headphones', 'printer', 'projector', 'scanner', 'none', 'book-mathematics', 'book-electronics', 'book-civil-engineering', 'book-mechanical-engineering', 'book-computer-engineering'];
 export const conditions = ['Good', 'Fair', 'Needs repair'];
 export function validateEquipment(body) {
   const errors = [];
